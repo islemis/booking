@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="heritage-pattern">
+        <h1><i class="fas fa-users"></i> Gestion des Utilisateurs</h1>
+    </div>
+
+    <div class="container my-5">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-envelope"></i> Email</th>
+                        <th><i class="fas fa-shield-alt"></i> Rôles</th>
+                        <th><i class="fas fa-cogs"></i> Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% for role in user.roles %}
+                                    <span class="badge badge-primary">{{ role }}</span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye"></i> Voir
+                                </a>
+                                <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </a>
+                                {{ include('user/_delete_form.html.twig') }}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">
+                                <i class="fas fa-info-circle"></i> Aucun utilisateur trouvé
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{{ path('app_user_new') }}" class="btn btn-success btn-lg">
+                <i class="fas fa-plus"></i> Créer un Nouvel Utilisateur
+            </a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une Réservation{% endblock %}
+
+{% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #343a40;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #565e64;
+            border-color: #565e64;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* Make the labels for 'Listing ID' and 'User ID' white */
+        label[for="form_listingId"], label[for="form_userId"] {
+            color: white !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="heritage-pattern">
+        <h1><i class="fas fa-calendar-plus"></i> Créer une Nouvelle Réservation</h1>
+    </div>
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-book"></i> Détails de la Réservation
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                            <div class="mb-3">
+                                {{ form_row(form.startDate, {'label': 'Date de Début', 'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_row(form.endDate, {'label': 'Date de Fin', 'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_row(form.phoneNumber, {'label': 'Numéro de Téléphone', 'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            
+                            <button type="submit" class="btn btn-success btn-lg w-100 mb-2">
+                                <i class="fas fa-save"></i> Créer la Réservation
+                            </button>
+                        {{ form_end(form) }}
+                        <a href="{{ path('app_listing_index') }}" class="btn btn-secondary w-100">
+                            <i class="fas fa-arrow-left"></i> Retour aux Annonces
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

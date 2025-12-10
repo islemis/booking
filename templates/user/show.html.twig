@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'Utilisateur{% endblock %}
+
+{% block body %}
+    <div class="heritage-pattern">
+        <h1><i class="fas fa-user"></i> Détails de l'Utilisateur</h1>
+    </div>
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th><i class="fas fa-envelope"></i> Email</th>
+                                    <td>{{ user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th><i class="fas fa-shield-alt"></i> Rôles</th>
+                                    <td>
+                                        {% for role in user.roles %}
+                                            <span class="badge badge-primary">{{ role }}</span>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer bg-transparent border-top">
+                        <a href="{{ path('app_user_index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Retour à la Liste
+                        </a>
+                        <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    {{ include('user/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

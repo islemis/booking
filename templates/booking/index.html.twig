@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservations{% endblock %}
+
+{% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .heritage-pattern {
+            text-align: center;
+            margin-top: 30px;
+            color: #343a40;
+        }
+
+        .heritage-pattern h1 {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .card-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .badge {
+            font-size: 0.9rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="heritage-pattern">
+        <h1><i class="fas fa-calendar-check"></i> Nos Réservations</h1>
+    </div>
+
+    <div class="container my-5">
+        <div class="row g-4">
+            {% for booking in bookings %}
+                {% set listing = booking.listingId %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ listing.title }}</h5>
+                            <p class="card-text">
+                                <strong><i class="fas fa-money-bill"></i> Prix:</strong> {{ listing.rentPrice }} TND
+                            </p>
+                            <p class="card-text">
+                                <strong><i class="fas fa-calendar"></i> Début:</strong> {{ booking.startDate ? booking.startDate|date('d/m/Y') : '-' }}
+                            </p>
+                            <p class="card-text">
+                                <strong><i class="fas fa-calendar"></i> Fin:</strong> {{ booking.endDate ? booking.endDate|date('d/m/Y') : '-' }}
+                            </p>
+                            <p class="card-text">
+                                <strong><i class="fas fa-info-circle"></i> Statut:</strong> 
+                                <span class="badge bg-info">{{ booking.status }}</span>
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top">
+                            <a href="{{ path('app_listing_show', {'id': listing.id}) }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye"></i> Voir les Détails
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center" role="alert">
+                        <i class="fas fa-info-circle"></i> Aucune réservation disponible pour le moment
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

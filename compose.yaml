@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Symfony App Service (PHP)
+  app:
+    image: php:8.1-fpm
+    container_name: symfony_app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    networks:
+      - symfony
+
+  # MySQL Database Service
+  database:
+    image: mysql:8.0
+    container_name: symfony_db
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-app}        # Name of your database
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-!ChangeMe!} # Root password
+      MYSQL_USER: ${MYSQL_USER:-app}                # MySQL user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-!ChangeMe!} # MySQL user password
+    ports:
+      - "3306:3306"  # MySQL default port
+    volumes:
+      - database_data:/var/lib/mysql
+    networks:
+      - symfony
+
+  # phpMyAdmin Service for MySQL management
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: symfony_phpmyadmin
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-!ChangeMe!} # Same root password as MySQL
+    ports:
+      - "8081:80"  # Expose phpMyAdmin on port 8080
+    depends_on:
+      - database
+    networks:
+      - symfony
+
+networks:
+  symfony:
+    driver: bridge
+
+volumes:
+  database_data:

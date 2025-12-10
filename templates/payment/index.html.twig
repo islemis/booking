@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiements{% endblock %}
+
+{% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #343a40;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .heritage-pattern {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .table-responsive {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .badge {
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        .btn {
+            margin: 5px;
+        }
+
+        .text-center a {
+            margin-top: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="heritage-pattern">
+        <h1><i class="fas fa-credit-card"></i> Gestion des Paiements</h1>
+    </div>
+
+    <div class="container my-5">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-tag"></i> ID</th>
+                        <th><i class="fas fa-money-bill"></i> Montant</th>
+                        <th><i class="fas fa-calendar"></i> Date de Paiement</th>
+                        <th><i class="fas fa-check-circle"></i> Statut</th>
+                        <th><i class="fas fa-cogs"></i> Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                        <tr>
+                            <td>{{ payment.id }}</td>
+                            <td>{{ payment.amount }} TND</td>
+                            <td>{{ payment.paymentDate ? payment.paymentDate|date('d/m/Y') : '-' }}</td>
+                            <td>
+                                <span class="badge {% if payment.paymentStatus == 'Completed' %}badge-success{% elseif payment.paymentStatus == 'Pending' %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ payment.paymentStatus }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ path('app_payment_show', {'id': payment.id}) }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye"></i> Voir
+                                </a>
+                                <a href="{{ path('app_payment_edit', {'id': payment.id}) }}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                <i class="fas fa-info-circle"></i> Aucun paiement trouvé
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{{ path('app_payment_new') }}" class="btn btn-success btn-lg">
+                <i class="fas fa-plus"></i> Créer un Paiement
+            </a>
+        </div>
+    </div>
+{% endblock %}

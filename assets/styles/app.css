@@ -1,0 +1,453 @@
+/* Tunisian Heritage Color Palette */
+:root {
+    --tunisia-red: #CE1126;
+    --tunisia-white: #FFFFFF;
+    --tunisia-green: #009246;
+    --tunisia-gold: #D4AF37;
+    --tunisia-blue: #003DA5;
+    --tunisia-beige: #E8D7C3;
+    --tunisia-terracotta: #B85C38;
+    --tunisia-dark: #1a1a1a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f1e8 0%, #e8d7c3 100%);
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Navbar Styling */
+.navbar {
+    background: transparent !important;
+    box-shadow: none;
+    padding: 1rem 0;
+    backdrop-filter: none;
+    position: static;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Fixed navbar on homepage only */
+body.homepage .navbar {
+    position: fixed;
+    top: 0;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--tunisia-white) !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.5px;
+}
+
+.nav-link {
+    color: var(--tunisia-white) !important;
+    font-weight: 500;
+    margin: 0 8px;
+    position: relative;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.nav-link:hover {
+    color: var(--tunisia-gold) !important;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--tunisia-gold);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Main Content */
+main {
+    min-height: calc(100vh - 70px);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--tunisia-red);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+h1 {
+    border-bottom: 3px solid var(--tunisia-gold);
+    padding-bottom: 10px;
+    font-size: 2.2rem;
+}
+
+h2 {
+    font-size: 1.8rem;
+}
+
+h5 {
+    color: var(--tunisia-blue);
+}
+
+/* Tables */
+.table {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table thead {
+    background: linear-gradient(90deg, var(--tunisia-red) 0%, var(--tunisia-blue) 100%);
+    color: var(--tunisia-white);
+}
+
+.table thead th {
+    padding: 1rem;
+    font-weight: 600;
+    border: none;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(206, 17, 38, 0.08);
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* Buttons */
+.btn {
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--tunisia-red) 0%, var(--tunisia-blue) 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--tunisia-blue) 0%, var(--tunisia-red) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(206, 17, 38, 0.3);
+    color: white;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--tunisia-green) 0%, #00a854 100%);
+    color: white;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #00a854 0%, var(--tunisia-green) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 146, 70, 0.3);
+    color: white;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--tunisia-gold) 0%, #e6c200 100%);
+    color: #333;
+    font-weight: 600;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e6c200 0%, var(--tunisia-gold) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+    color: #333;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--tunisia-terracotta) 0%, #d64e3d 100%);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #d64e3d 0%, var(--tunisia-terracotta) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(184, 92, 56, 0.3);
+    color: white;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-lg {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Cards */
+.card {
+    background: rgba(255, 255, 255, 0.97);
+    border: 2px solid var(--tunisia-gold);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 35px rgba(206, 17, 38, 0.15);
+    border-color: var(--tunisia-red);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--tunisia-red) 0%, var(--tunisia-blue) 100%);
+    color: var(--tunisia-white);
+    border: none;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    color: var(--tunisia-red);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.card-footer {
+    background-color: rgba(212, 175, 55, 0.05);
+    border-top: 1px solid var(--tunisia-gold);
+    padding: 1rem;
+}
+
+/* Forms */
+.form-control, .form-select {
+    border: 2px solid var(--tunisia-beige);
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.95);
+    font-size: 0.95rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--tunisia-red);
+    box-shadow: 0 0 0 0.2rem rgba(206, 17, 38, 0.15);
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.form-label {
+    color: var(--tunisia-blue);
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+}
+
+/* Alert Messages */
+.alert {
+    border-radius: 10px;
+    border: none;
+    padding: 1rem 1.5rem;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, rgba(0, 146, 70, 0.1) 0%, rgba(0, 182, 84, 0.1) 100%);
+    border-left: 4px solid var(--tunisia-green);
+    color: var(--tunisia-green);
+    font-weight: 500;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, rgba(206, 17, 38, 0.1) 0%, rgba(184, 92, 56, 0.1) 100%);
+    border-left: 4px solid var(--tunisia-red);
+    color: var(--tunisia-red);
+    font-weight: 500;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(230, 194, 0, 0.1) 100%);
+    border-left: 4px solid var(--tunisia-gold);
+    color: var(--tunisia-terracotta);
+    font-weight: 500;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, rgba(0, 61, 165, 0.1) 0%, rgba(0, 146, 70, 0.1) 100%);
+    border-left: 4px solid var(--tunisia-blue);
+    color: var(--tunisia-blue);
+    font-weight: 500;
+}
+
+/* Links */
+a {
+    color: var(--tunisia-red);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+a:hover {
+    color: var(--tunisia-blue);
+}
+
+/* Badges */
+.badge {
+    padding: 0.5rem 0.8rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.badge-success {
+    background: linear-gradient(135deg, var(--tunisia-green) 0%, #00a854 100%);
+}
+
+.badge-primary {
+    background: linear-gradient(135deg, var(--tunisia-red) 0%, var(--tunisia-blue) 100%);
+}
+
+.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+/* Heritage Decorative Elements */
+.heritage-divider {
+    background: linear-gradient(90deg, var(--tunisia-red), var(--tunisia-gold), var(--tunisia-green));
+    height: 3px;
+    margin: 2rem 0;
+    border-radius: 2px;
+}
+
+.heritage-pattern {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(206, 17, 38, 0.05) 100%);
+    padding: 2rem;
+    border-radius: 10px;
+    margin: 1.5rem 0;
+    border-left: 5px solid var(--tunisia-gold);
+}
+
+/* Container Styling */
+.container-fluid {
+    padding: 2rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Footer */
+footer {
+    background: #f5f1e8;
+    color: #333;
+    padding: 2rem 1rem;
+    text-align: center;
+    margin-top: 3rem;
+    border-top: 2px solid var(--tunisia-gold);
+}
+
+footer h5 {
+    color: var(--tunisia-red);
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+footer p {
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    color: #555;
+}
+
+footer a {
+    color: var(--tunisia-red);
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+footer a:hover {
+    color: var(--tunisia-blue);
+    text-decoration: underline;
+}
+
+.social-icons a {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 50%;
+    background: var(--tunisia-red);
+    color: white;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.social-icons a:hover {
+    background: var(--tunisia-blue);
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.3rem;
+    }
+
+    .nav-link {
+        margin: 5px 0;
+        font-size: 0.9rem;
+    }
+
+    .card {
+        margin: 1rem 0;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .container-fluid {
+        padding: 1rem;
+    }
+
+    footer {
+        padding: 2rem 1rem;
+    }
+
+    footer h5 {
+        font-size: 1rem;
+    }
+
+    .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
+}
