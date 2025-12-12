@@ -3,242 +3,125 @@
 {% block title %}Créer un Compte{% endblock %}
 
 {% block body %}
-    <section class="background-video-wrapper position-relative vh-100 d-flex align-items-center justify-content-center">
-        <!-- Background Video -->
-        <video autoplay muted loop playsinline class="background-video">
-            <source src="{{ asset('assets/videos/background.mp4') }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+<section class="form-section d-flex align-items-center justify-content-center vh-100">
 
-        <!-- Foreground Content -->
-        <div class="card bg-glass shadow-lg p-4 position-relative">
-            <div class="card-body">
-                <h1 class="h4 text-center mb-4"><i class="fas fa-user-plus"></i> Créer un Compte</h1>
+    <!-- Card/Form Wrapper -->
+    <div class="card">
+        <h2 class="text-center mb-4"><i class="fas fa-user-plus"></i> Créer un Compte</h2>
 
-                {{ form_start(form) }}
+        {{ form_start(form) }}
 
-                <!-- Form Fields -->
-                <div class="form-floating mb-3">
-                    {{ form_row(form.firstName, {
-                        'label': 'Prénom',
-                        'attr': {'placeholder': 'Prénom', 'class': 'form-control'}
-                    }) }}
+        <!-- Form Fields -->
+        {% for field in form %}
+{% if field.vars.name != 'roles' and field.vars.name != '_token' %}
+                <div class="mb-3">
+                    {{ form_label(field) }}
+                    {{ form_widget(field, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(field) }}
                 </div>
+            {% endif %}
+        {% endfor %}
 
-                <div class="form-floating mb-3">
-                    {{ form_row(form.lastName, {
-                        'label': 'Nom',
-                        'attr': {'placeholder': 'Nom', 'class': 'form-control'}
-                    }) }}
-                </div>
-
-                <div class="form-floating mb-3">
-                    {{ form_row(form.phoneNumber, {
-                        'label': 'Numéro de Téléphone',
-                        'attr': {'placeholder': 'Numéro de téléphone', 'class': 'form-control'}
-                    }) }}
-                </div>
-
-                <div class="form-floating mb-3">
-                    {{ form_row(form.username, {
-                        'label': 'Nom d\'utilisateur',
-                        'attr': {'placeholder': 'Nom d\'utilisateur', 'class': 'form-control'}
-                    }) }}
-                </div>
-
-                <div class="form-floating mb-3">
-                    {{ form_row(form.email, {
-                        'label': 'Email',
-                        'attr': {'placeholder': 'Email', 'class': 'form-control'}
-                    }) }}
-                </div>
-
-                <div class="form-floating mb-3">
-                    {{ form_row(form.password, {
-                        'label': 'Mot de passe',
-                        'attr': {'placeholder': 'Mot de passe', 'class': 'form-control'}
-                    }) }}
-                </div>
-
-                <!-- Role Selection -->
-                <div class="mb-4">
-                    <label class="form-label"><strong><i class="fas fa-user-tag"></i> {{ form.roles.vars.label }}</strong></label>
-                    <div class="role-selection">
-                        {% for child in form.roles %}
-                            <div class="form-check role-option">
-                                {{ form_widget(child, {'attr': {'class': 'form-check-input role-radio'}}) }}
-                                <label class="form-check-label role-label" for="{{ child.vars.id }}">
-                                    {% if 'locataire' in child.vars.label|lower %}
-                                        <i class="fas fa-search"></i> {{ child.vars.label }}
-                                    {% else %}
-                                        <i class="fas fa-home"></i> {{ child.vars.label }}
-                                    {% endif %}
-                                </label>
-                            </div>
-                        {% endfor %}
+        <!-- Role Selection -->
+        <div class="mb-4">
+            <label class="form-label"><strong><i class="fas fa-user-tag"></i> {{ form.roles.vars.label }}</strong></label>
+            <div class="role-selection">
+                {% for child in form.roles %}
+                    <div class="role-option">
+                        {{ form_widget(child, {'attr': {'class': 'form-check-input'}}) }}
+                        <label class="form-check-label" for="{{ child.vars.id }}">
+                            {{ child.vars.label }}
+                        </label>
                     </div>
-                    <small class="text-muted d-block mt-2">{{ form.roles.vars.help }}</small>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="text-center">
-                    <button class="btn btn-success btn-lg w-100" type="submit">
-                        <i class="fas fa-check-circle"></i> Créer le Compte
-                    </button>
-                </div>
-
-                <div class="text-center mt-3">
-                    <small>Vous avez déjà un compte? <a href="{{ path('app_login') }}">Connectez-vous</a></small>
-                </div>
-
-                {{ form_end(form) }}
+                {% endfor %}
             </div>
         </div>
-    </section>
 
-    <!-- Styling -->
-    <style>
-        .background-video-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-        }
+        <!-- Submit Button -->
+        <button class="btn btn-primary w-100 mb-2" type="submit">
+            <i class="fas fa-check-circle"></i> Créer le Compte
+        </button>
 
-        .background-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-        }
+        <div class="text-center mt-2">
+            <small>Vous avez déjà un compte? <a href="{{ path('app_login') }}">Connectez-vous</a></small>
+        </div>
 
-        .card {
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            width: 100%;
-            max-width: 550px;
-            max-height: 90vh;
-            overflow-y: auto;
-            z-index: 1;
-            border: 2px solid #D4AF37;
-        }
+        {{ form_end(form) }}
+    </div>
+</section>
 
-        .form-floating label {
-            color: #6c757d;
-        }
+<style>
+body {
+    background-color: #f5f5f5;
+}
 
-        .form-control {
-            border: 2px solid #E8D7C3;
-            border-radius: 8px;
-        }
+.form-section {
+    padding: 2rem;
+}
 
-        .form-control:focus {
-            border-color: #CE1126;
-            box-shadow: 0 0 0 0.2rem rgba(206, 17, 38, 0.15);
-        }
+.card {
+    width: 100%;
+    max-width: 600px; /* plus grand formulaire */
+    padding: 3rem;     /* plus de padding pour respirer */
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
 
-        .btn-success {
-            background: linear-gradient(135deg, #009246 0%, #00a854 100%);
-            border: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 0.75rem 1rem; /* plus grand input */
+}
 
-        .btn-success:hover {
-            background: linear-gradient(135deg, #00a854 0%, #009246 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 146, 70, 0.3);
-        }
+.btn-primary {
+    background-color: #CE1126;
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem 0;
+}
 
-        .role-selection {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
-        }
+.btn-primary:hover {
+    background-color: #CE1126; /* pas d'effet hover */
+}
 
-        .role-option {
-            position: relative;
-            padding: 15px;
-            border: 2px solid #E8D7C3;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background-color: #f9f9f9;
-        }
+.role-selection {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
 
-        .role-option:hover {
-            border-color: #CE1126;
-            background-color: rgba(206, 17, 38, 0.05);
-        }
+.role-option {
+    flex: 1;
+    min-width: 120px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #fafafa;
+    cursor: default; /* enlever hover animé */
+}
 
-        .role-radio {
-            margin-top: 3px;
-        }
+.role-option input[type="radio"]:checked + label {
+    color: #CE1126;
+    font-weight: bold;
+}
 
-        .role-radio:checked + .role-label {
-            color: #CE1126;
-            font-weight: 600;
-        }
+a {
+    color: #CE1126;
+    font-weight: 600;
+    text-decoration: none;
+}
 
-        .role-option input[type="radio"]:checked {
-            border-color: #CE1126;
-            background-color: #CE1126;
-        }
+a:hover {
+    text-decoration: underline;
+    color: #003DA5;
+}
 
-        .role-option input[type="radio"]:checked ~ .role-label {
-            color: #CE1126;
-            font-weight: 600;
-        }
-
-        .role-option.checked {
-            border-color: #CE1126;
-            background-color: rgba(206, 17, 38, 0.1);
-        }
-
-        .role-label {
-            font-size: 0.95rem;
-            margin-bottom: 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .role-label i {
-            margin-right: 5px;
-        }
-
-        .form-label {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1rem;
-        }
-
-        a {
-            color: #CE1126;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        a:hover {
-            text-decoration: underline;
-            color: #003DA5;
-        }
-
-        h1 {
-            color: #CE1126;
-        }
-
-        @media (max-width: 768px) {
-            .role-selection {
-                grid-template-columns: 1fr;
-            }
-
-            .card {
-                max-width: 90%;
-            }
-        }
-    </style>
+@media (max-width: 576px) {
+    .role-selection {
+        flex-direction: column;
+    }
+}
+</style>
 {% endblock %}

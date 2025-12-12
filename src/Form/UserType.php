@@ -66,7 +66,7 @@ class UserType extends AbstractType
                     'Admin' => 'ROLE_ADMIN',
                 ],
                 'expanded' => true,
-                'multiple' => true,
+                'multiple' => false,
                 'help' => 'Sélectionnez un ou plusieurs rôles',
             ]);
         } else {
@@ -74,13 +74,14 @@ class UserType extends AbstractType
             $builder->add('roles', ChoiceType::class, [
                 'label' => 'Je suis...',
                 'choices' => [
-                    'Un locataire (cherche un appartement)' => 'ROLE_USER',
-                    'Un propriétaire (loue un appartement)' => 'ROLE_OWNER',
+                    'Locataire' => 'ROLE_USER',
+                    'Propriétaire' => 'ROLE_OWNER',
                 ],
                 'expanded' => true,
-                'multiple' => true,
-                'help' => 'Choisissez votre type de compte',
+                'multiple' => false, // radio button
+                'mapped' => false, // temporarily unmapped
             ]);
+            
         }
         
         $builder->add('password', PasswordType::class, [

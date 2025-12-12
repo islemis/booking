@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Booking;
 use App\Form\BookingType;
+use App\Form\NewBookingType;
+
 use App\Repository\BookingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,40 +47,49 @@ final class BookingController extends AbstractController{
     #[Route('/new', name: 'app_booking_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Only ROLE_USER can create bookings
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
+    
         $booking = new Booking();
-        
-        // Get the listing ID from the URL parameter
+    
+        // Set the current user
+        $booking->setUserId($this->getUser());
+    
+        // Get the listing ID from the URL parameter and set it
         $listingId = $request->query->get('id');
         if ($listingId) {
             $listing = $entityManager->getRepository(\App\Entity\Listing::class)->find($listingId);
             if ($listing) {
                 $booking->setListingId($listing);
+            } else {
+                throw $this->createNotFoundException('Listing not found.');
             }
+        } else {
+            throw $this->createNotFoundException('Listing ID is missing.');
         }
-        
-        // Set the current user as the booker
-        $booking->setUserId($this->getUser());
-        
-        $form = $this->createForm(BookingType::class, $booking);
+    
+        // Create the form
+        $form = $this->createForm(NewBookingType::class, $booking);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            // Set the status to pending
-            $booking->setStatus('pending');
+            // Set default status to 'pending' only if not already set
+            if (!$booking->getStatus()) {
+                $booking->setStatus('pending');
+            }
+    
             $entityManager->persist($booking);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_booking_show', ['id' => $booking->getId()], Response::HTTP_SEE_OTHER);
+    
+            return $this->redirectToRoute('app_booking_show', [
+                'id' => $booking->getId()
+            ], Response::HTTP_SEE_OTHER);
         }
-
+    
         return $this->render('booking/new.html.twig', [
             'booking' => $booking,
             'form' => $form,
         ]);
     }
+    
 
     #[Route('/{id}', name: 'app_booking_show', methods: ['GET'])]
     public function show(Booking $booking): Response
@@ -100,9 +111,9 @@ final class BookingController extends AbstractController{
         if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $booking->getUserId()) {
             throw $this->createAccessDeniedException('Vous ne pouvez éditer que vos propres réservations');
         }
-
-        $form = $this->createForm(BookingType::class, $booking);
+        $form = $this->createForm(BookingType::class, $booking, ['is_new' => true]);
         $form->handleRequest($request);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
@@ -135,26 +146,27 @@ final class BookingController extends AbstractController{
     #[Route('/owner/{id}/edit', name: 'app_owner_booking_edit', methods: ['GET', 'POST'])]
     public function ownerEdit(Request $request, Booking $booking, EntityManagerInterface $entityManager): Response
     {
-        // Only the owner of the listing can edit the booking status
+        // Only the owner of the listing can edit the booking
         $listing = $booking->getListingId();
         if (!$this->isGranted('ROLE_ADMIN') && $listing->getOwner() !== $this->getUser()) {
             throw $this->createAccessDeniedException('Vous ne pouvez éditer que les réservations de vos annonces');
         }
-
+    
         $form = $this->createForm(BookingType::class, $booking);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
             $this->addFlash('success', 'Réservation mise à jour avec succès');
-            return $this->redirectToRoute('app_owner_bookings', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_owner_bookings');
         }
-
+    
         return $this->render('booking/owner-edit.html.twig', [
             'booking' => $booking,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
+    
 
     #[Route('/owner/{id}', name: 'app_owner_booking_delete', methods: ['POST'])]
     public function ownerDelete(Request $request, Booking $booking, EntityManagerInterface $entityManager): Response

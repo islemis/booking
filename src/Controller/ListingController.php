@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/home')]
+#[Route('/listings')]
 final class ListingController extends AbstractController{
     #[Route(name: 'app_listing_index', methods: ['GET'])]
     public function index(ListingRepository $listingRepository): Response

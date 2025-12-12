@@ -29,29 +29,27 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $username = $user->getUsername();
-            if (empty($username)) {
-                throw new \Exception('Username is empty!');
-            }
-            
-            $password = $user->getPassword();
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-            $user->setPassword($hashedPassword);
-            
-            // Ensure roles is always an array
-            $roles = $user->getRoles();
-            if (!is_array($roles)) {
-                $user->setRoles([$roles]);
-            } elseif (empty($roles)) {
-                $user->setRoles(['ROLE_USER']);
-            }
+            $password = password_hash($user->getPassword(), PASSWORD_BCRYPT);
+            $user->setPassword($password);
+        
+            $selectedRole = $form->get('roles')->getData();
+            $user->setRoles([$selectedRole]);
         
             $entityManager->persist($user);
-            $entityManager->flush();
         
-            // Automatically log in the user after registration
+            try {
+                $entityManager->flush();
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+                // Ajouter une erreur sur le formulaire
+                $form->get('email')->addError(new \Symfony\Component\Form\FormError('Cette adresse email est déjà utilisée.'));
+                return $this->render('user/new.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+        
             return $userAuthenticator->authenticateUser($user, $authenticator, $request);
         }
+        
         
         return $this->render('user/new.html.twig', [
             'form' => $form->createView(),
