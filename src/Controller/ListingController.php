@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\ListingImage;
 
 use App\Entity\Listing;
 use App\Form\ListingType;
@@ -21,37 +22,53 @@ final class ListingController extends AbstractController{
         ]);
     }
 
-    #[Route('/new', name: 'app_listing_new', methods: ['GET', 'POST'])]
-    public function newListing(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $listing = new Listing();
-        $form = $this->createForm(ListingType::class, $listing);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $listing->setDateOfPublish(new \DateTime());
-            
-            // Set the owner to the current user
-            $listing->setOwner($this->getUser());
+#[Route('/new', name: 'app_listing_new', methods: ['GET', 'POST'])]
+public function newListing(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $listing = new Listing();
+    $form = $this->createForm(ListingType::class, $listing);
+    $form->handleRequest($request);
 
-            // Ensure the appartment is set
-            if (!$listing->getAppartment()) {
-                $this->addFlash('error', 'Please select an appartment.');
-                return $this->render('listing/new.html.twig', [
-                    'form' => $form->createView(),
-                ]);
-            }
+    if ($form->isSubmitted() && $form->isValid()) {
+        $listing->setDateOfPublish(new \DateTime());
 
-            $entityManager->persist($listing);
-            $entityManager->flush();
+        // Set the owner to the current user
+        $listing->setOwner($this->getUser());
 
-            return $this->redirectToRoute('app_listing_index');
+        // Ensure the appartment is set
+        if (!$listing->getAppartment()) {
+            $this->addFlash('error', 'Please select an appartment.');
+            return $this->render('listing/new.html.twig', [
+                'form' => $form->createView(),
+            ]);
         }
 
-        return $this->render('listing/new.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        // Handle images
+        $files = $form->get('imagesUpload')->getData();
+
+        foreach ($files as $file) {
+            $fileName = uniqid().'.'.$file->guessExtension();
+            $file->move($this->getParameter('uploads_directory'), $fileName);
+
+            $image = new ListingImage();
+            $image->setImagePath($fileName);
+            $image->setListing($listing);
+
+            $entityManager->persist($image);
+        }
+
+        // Persist listing only once
+        $entityManager->persist($listing);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_listing_index');
     }
+
+    return $this->render('listing/new.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
     
     
     #[Route('/{id}', name: 'app_listing_show', methods: ['GET'])]
@@ -62,29 +79,47 @@ final class ListingController extends AbstractController{
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_listing_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Listing $listing, EntityManagerInterface $entityManager): Response
-    {
-        // Check if user is admin or owner of the listing
-        $user = $this->getUser();
-        if (!$this->isGranted('ROLE_ADMIN') && $listing->getOwner() !== $user) {
-            throw $this->createAccessDeniedException('You cannot edit this listing.');
-        }
-
-        $form = $this->createForm(ListingType::class, $listing);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_listing_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('listing/edit.html.twig', [
-            'listing' => $listing,
-            'form' => $form,
-        ]);
+#[Route('/{id}/edit', name: 'app_listing_edit', methods: ['GET', 'POST'])]
+public function edit(Request $request, Listing $listing, EntityManagerInterface $entityManager): Response
+{
+    // Vérifier si l'utilisateur est admin ou propriétaire
+    $user = $this->getUser();
+    if (!$this->isGranted('ROLE_ADMIN') && $listing->getOwner() !== $user) {
+        throw $this->createAccessDeniedException('You cannot edit this listing.');
     }
+
+    $form = $this->createForm(ListingType::class, $listing);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Gérer les nouvelles images
+        $files = $form->get('imagesUpload')->getData();
+
+        if ($files) {
+            foreach ($files as $file) {
+                $fileName = uniqid().'.'.$file->guessExtension();
+                $file->move($this->getParameter('uploads_directory'), $fileName);
+
+                $image = new ListingImage();
+                $image->setImagePath($fileName);
+                $image->setListing($listing);
+
+                $entityManager->persist($image);
+            }
+        }
+
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Listing updated successfully.');
+
+        return $this->redirectToRoute('app_listing_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    return $this->render('listing/edit.html.twig', [
+        'listing' => $listing,
+        'form' => $form->createView(),
+    ]);
+}
 
     #[Route('/{id}', name: 'app_listing_delete', methods: ['POST'])]
     public function delete(Request $request, Listing $listing, EntityManagerInterface $entityManager): Response

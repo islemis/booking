@@ -1,4 +1,3 @@
-
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -10,6 +9,8 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_OWNER
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

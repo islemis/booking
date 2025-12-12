@@ -19,7 +19,8 @@
                         <i class="fas fa-list"></i> Détails de l'Annonce
                     </div>
                     <div class="card-body">
-                        {{ form_start(form) }}
+                        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
                             <div class="mb-3">
                                 {{ form_row(form.title, {'label': 'Titre', 'attr': {'class': 'form-control', 'placeholder': 'Titre de l\'annonce'}}) }}
                             </div>
@@ -38,6 +39,36 @@
                             <div class="mb-3">
                                 {{ form_row(form.appartment, {'label': 'Appartement', 'attr': {'class': 'form-control'}}) }}
                             </div>
+           <div class="mb-3">
+    {{ form_row(form.imagesUpload, {
+        'label': 'Images',
+        'attr': {'class': 'form-control', 'multiple': 'multiple'}
+    }) }}
+    <div id="previewImages" class="mt-2 d-flex flex-wrap gap-2"></div>
+</div>
+
+<script>
+    const input = document.getElementById('imagesUpload');
+    const preview = document.getElementById('previewImages');
+
+    input.addEventListener('change', () => {
+        preview.innerHTML = '';
+        Array.from(input.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '100px';
+                img.style.height = '100px';
+                img.style.objectFit = 'cover';
+                img.classList.add('border', 'rounded');
+                preview.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
+
                             <button type="submit" class="btn btn-success btn-lg w-100 mb-2">
                                 <i class="fas fa-save"></i> Créer l'Annonce
                             </button>

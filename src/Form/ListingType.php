@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class ListingType extends AbstractType
 {
@@ -28,7 +29,14 @@ class ListingType extends AbstractType
                 'class' => Appartment::class,
                 'choice_label' => 'type',
                 'placeholder' => 'Select an appartment',
-            ]);
+            ])
+            ->add('imagesUpload', FileType::class, [
+        'mapped' => false,
+        'required' => false,
+        'multiple' => true,
+        'label' => 'Images',
+    ])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -2,63 +2,152 @@
 
 {% block title %}Listing{% endblock %}
 
+{% block stylesheets %}
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 30px 0;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .listing-table {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .listing-table th {
+        width: 180px;
+        text-align: left;
+        color: #495057;
+    }
+
+    .listing-table td {
+        color: #343a40;
+    }
+
+    /* Carousel images */
+.carousel-item img {
+    height: 150px !important;       /* hauteur fixe */
+    width: 250px !important;        /* largeur fixe */
+    border-radius: 10px;
+    margin: auto;
+    display: block;
+}
+
+
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    /* Optionnel : contrôle du carousel (flèches) */
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: rgba(0,0,0,0.5);
+        border-radius: 50%;
+    }
+</style>
+{% endblock %}
+
 {% block body %}
-    <h1>Listing</h1>
+<div class="container my-5">
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ listing.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ listing.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ listing.description }}</td>
-            </tr>
-            <tr>
-                <th>Address</th>
-                <td>{{ listing.address }}</td>
-            </tr>
-            <tr>
-                <th>RentPrice</th>
-                <td>{{ listing.rentPrice }}</td>
-            </tr>
-            <tr>
-                <th>Availabefrom</th>
-                <td>{{ listing.availableFrom|date('Y-m-d') }}</td>
-            </tr>
-            <tr>
-                <th><i class="fas fa-user"></i> Owner</th>
-                <td>{{ listing.owner.fullName }}</td>
-            </tr>
-            <tr>
-                <th><i class="fas fa-phone"></i> Phone</th>
-                <td>{{ listing.owner.phoneNumber }}</td>
-            </tr>
-            <tr>
-                <th><i class="fas fa-calendar"></i> Published Date</th>
-                <td>{{ listing.dateOfPublish|date('d/m/Y H:i') }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h1><i class="fas fa-list"></i> {{ listing.title }}</h1>
 
-    <a href="{{ path('app_listing_index') }}">back to list</a>
-
-    <!-- Show edit button only for owner or admin -->
-    {% if is_granted('ROLE_ADMIN') or (app.user and app.user.id == listing.owner.id) %}
-        <a href="{{ path('app_listing_edit', {'id': listing.id}) }}">edit</a>
-
-        {{ include('listing/_delete_form.html.twig') }}
+    {% if listing.images|length > 0 %}
+        <!-- Bootstrap Carousel -->
+        <div id="listingCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for image in listing.images %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img src="{{ asset('uploads/' ~ image.imagePath) }}" class="d-block" alt="Image {{ loop.index }}">
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#listingCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#listingCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    {% else %}
+        <img src="{{ asset('uploads/default.png') }}" alt="Default image" class="d-block mx-auto mb-4" style="height:150px; width:100%; border-radius:10px;">
     {% endif %}
 
-    <!-- Show reserve button only for ROLE_USER (not owner) -->
-    {% if is_granted('ROLE_USER') and (not app.user or app.user.id != listing.owner.id) %}
-        <a href="{{ path('app_booking_new', {'id': listing.id}) }}" class="btn btn-primary mt-3">
-            <i class="fas fa-calendar-check"></i> Réserver
+    <!-- Listing details -->
+    <div class="listing-table table-responsive">
+        <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <th>Title</th>
+                    <td>{{ listing.title }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ listing.description }}</td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td>{{ listing.address }}</td>
+                </tr>
+                <tr>
+                    <th>Rent Price</th>
+                    <td>{{ listing.rentPrice }} TND</td>
+                </tr>
+                <tr>
+                    <th>Available From</th>
+                    <td>{{ listing.availableFrom|date('Y-m-d') }}</td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-user"></i> Owner</th>
+                    <td>{{ listing.owner.fullName }}</td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-phone"></i> Phone</th>
+                    <td>{{ listing.owner.phoneNumber }}</td>
+                </tr>
+                <tr>
+                    <th><i class="fas fa-calendar"></i> Published Date</th>
+                    <td>{{ listing.dateOfPublish|date('d/m/Y H:i') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-container">
+        <a href="{{ path('app_listing_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to list
         </a>
-    {% endif %}
+
+        {% if is_granted('ROLE_ADMIN') or (app.user and app.user.id == listing.owner.id) %}
+            <a href="{{ path('app_listing_edit', {'id': listing.id}) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+
+            {{ include('listing/_delete_form.html.twig') }}
+        {% endif %}
+
+        {% if is_granted('ROLE_USER') and (not app.user or app.user.id != listing.owner.id) %}
+            <a href="{{ path('app_booking_new', {'id': listing.id}) }}" class="btn btn-primary">
+                <i class="fas fa-calendar-check"></i> Réserver
+            </a>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

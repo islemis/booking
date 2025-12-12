@@ -58,7 +58,7 @@
     {% endif %}
 
     <!-- Only show create button for owners and admins -->
-    {% if is_granted('ROLE_OWNER') %}
+    {% if is_granted('ROLE_OWNER') or is_granted('ROLE_ADMIN') %}
         <div class="text-center mt-5">
             <a href="{{ path('app_appartment_new') }}" class="btn btn-success btn-lg">
                 <i class="fas fa-plus"></i> Ajouter un Appartement

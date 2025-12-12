@@ -4,6 +4,8 @@
 use App\Repository\ListingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ListingRepository::class)]
@@ -39,6 +41,40 @@ class Listing
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $owner = null;
+    #[ORM\OneToMany(mappedBy: 'listing', targetEntity: ListingImage::class, cascade: ['persist', 'remove'])]
+private Collection $images;
+
+public function __construct()
+{
+    $this->images = new ArrayCollection();
+}
+
+public function getImages(): Collection
+{
+    return $this->images;
+}
+
+public function addImage(ListingImage $image): static
+{
+    if (!$this->images->contains($image)) {
+        $this->images->add($image);
+        $image->setListing($this);
+    }
+
+    return $this;
+}
+
+public function removeImage(ListingImage $image): static
+{
+    if ($this->images->removeElement($image)) {
+        if ($image->getListing() === $this) {
+            $image->setListing(null);
+        }
+    }
+
+    return $this;
+}
+
 
     // Getters and setters
 
